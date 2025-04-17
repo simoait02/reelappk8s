@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reelapp-webapp
+  labels:
+    app: reelapp-webapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: reelapp-webapp
+  template:
+    metadata:
+      name: reelapp-webapp
+      labels:
+        app: reelapp-webapp
+    spec:
+      containers:
+        - name: reelapp-webapp
+          image: simo3011w/reelapp-webapp-service
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              protocol: TCP
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+spec:
+  selector:
+    app: reelapp-webapp
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 32006
+  type: NodePort
