@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: reelapp-webapp
-          image: simo3011w/reelapp-webapp-service
+          image: simo3011w/reelapp-webapp-service:main
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
