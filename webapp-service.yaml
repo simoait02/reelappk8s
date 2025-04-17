@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: reelapp-webapp
+  namespace: reelapp
   labels:
     app: reelapp-webapp
 spec:
