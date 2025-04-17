@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reelapp-auth
+  namespace: reelapp
+  labels:
+    app: reelapp-auth
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: reelapp-auth
+  template:
+    metadata:
+      name: reelapp-auth
+      labels:
+        app: reelapp-auth
+    spec:
+      containers:
+        - name: reelapp-auth
+          image: simo3011w/reelapp-auth-service:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8443
+              protocol: TCP
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres-service:5432/Users"
+            - name: MINIO_URL
+              value: "http://minio-service:9000"
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: reelapp
+  name: reelapp-auth-service
+spec:
+  ports:
+    - port: 8443
+      targetPort: 8443
+      nodePort: 32001
+  type: NodePort
+  selector:
+    app: reelapp-auth

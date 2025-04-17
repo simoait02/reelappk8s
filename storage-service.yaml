@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reelapp-storage
+  namespace: reelapp
+  labels:
+    app: reelapp-storage
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: reelapp-storage
+  template:
+    metadata:
+      name: reelapp-storage
+      labels:
+        app: reelapp-storage
+    spec:
+      containers:
+        - name: reelapp-storage
+          image: simo3011w/reelapp-storage-service:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9090
+              protocol: TCP
+          env:
+            - name: SPRING_DATA_MONGODB_URI
+              value: mongodb://simo:123@mongodb-service:27017/storage-service?authSource=admin
+            - name: MINIO_URL
+              value: "http://minio-service:9000"
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: reelapp
+  name: reelapp-storage-service
+spec:
+  ports:
+    - port: 9090
+      targetPort: 9090
+      nodePort: 32002
+  type: NodePort
+  selector:
+    app: reelapp-storage

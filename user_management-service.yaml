@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reelapp-user_management
+  namespace: reelapp
+  labels:
+    app: reelapp-user_management
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: reelapp-user_management
+  template:
+    metadata:
+      labels:
+        app: reelapp-user_management
+    spec:
+      containers:
+        - name: reelapp-user_management
+          image: simo3011w/reelapp-user_management-service:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
+              protocol: TCP
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres-service:5432/Users"
+            - name: MINIO_URL
+              value: "http://minio-service:9000"
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: reelapp
+  name: reelapp-user_management-service
+spec:
+  selector:
+    app: reelapp-user_management
+  type: NodePort
+  ports:
+    - port: 8081
+      targetPort: 8081
+      nodePort: 32003
