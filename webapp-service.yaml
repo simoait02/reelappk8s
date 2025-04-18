@@ -38,3 +38,25 @@ spec:
       targetPort: 80
       nodePort: 32006
   type: LoadBalancer
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: reelapp-webapp-ingress
+  namespace: reelapp
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+    - host: reelapp.localhost
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: reelapp-webapp-service
+                port:
+                  number: 80
+
