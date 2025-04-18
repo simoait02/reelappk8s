@@ -18,7 +18,7 @@ spec:
       containers:
         - name: reelapp-user-management
           image: simo3011w/reelapp-user_management-service:main
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8081
               protocol: TCP

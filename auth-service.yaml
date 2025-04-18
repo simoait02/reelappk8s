@@ -19,7 +19,7 @@ spec:
       containers:
         - name: reelapp-auth
           image: simo3011w/reelapp-auth-service:main
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8443
               protocol: TCP
