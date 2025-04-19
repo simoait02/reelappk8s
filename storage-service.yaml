@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: reelapp-storage
-          image: simo3011w/reelapp-storage-service:2.0.9
+          image: simo3011w/reelapp-storage-service:main
           imagePullPolicy: Always
           ports:
             - containerPort: 9090
