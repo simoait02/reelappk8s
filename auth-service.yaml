@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: reelapp-auth
-          image: simo3011w/reelapp-auth-service:main
+          image: simo3011w/reelapp-auth-service:1.0.1
           imagePullPolicy: Always
           ports:
             - containerPort: 8443
@@ -27,7 +27,7 @@ spec:
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:postgresql://postgres-service:5432/Users"
             - name: MINIO_URL
-              value: "http://minio-service:9000"
+              value: "http://10.1.1.198:9000"
       restartPolicy: Always
 ---
 apiVersion: v1
@@ -43,3 +43,23 @@ spec:
   type: NodePort
   selector:
     app: reelapp-auth
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: reelapp-auth-ingress
+  namespace: reelapp
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+    - host: auth.reelapp.localhost
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: reelapp-auth-service
+                port:
+                  number: 8443

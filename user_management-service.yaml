@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: reelapp-user-management
-          image: simo3011w/reelapp-user_management-service:main
+          image: simo3011w/reelapp-user_management-service:1.0.1
           imagePullPolicy: Always
           ports:
             - containerPort: 8081
@@ -26,7 +26,7 @@ spec:
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:postgresql://postgres-service:5432/Users"
             - name: MINIO_URL
-              value: "http://minio-service:9000"
+              value: "http://10.1.1.198:9000"
       restartPolicy: Always
 ---
 apiVersion: v1
@@ -43,3 +43,23 @@ spec:
       port: 8081
       targetPort: 8081
       nodePort: 32003
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: reelapp-user-management-ingress
+  namespace: reelapp
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+    - host: user.reelapp.localhost
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: reelapp-user-management-service
+                port:
+                  number: 8081
